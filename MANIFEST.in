@@ -1,0 +1,5 @@
+include README.md manage.py LICENSE
+recursive-exclude permissivecsrf *.pyc
+recursive-exclude assets *.jpg
+recursive-exclude test_project *.pyc
+recursive-include test_project *.py
