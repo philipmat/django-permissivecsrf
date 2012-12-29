@@ -34,7 +34,7 @@ Usage
 Modify your Django ``settings.py`` file and prepend PermissiveCSRF to your ``MIDDLEWARE_CLASSES``:
 
     MIDDLEWARE_CLASSES = (
-        'permissivecsrf.middleware.PermissiveCSRF',
+        'permissivecsrf.middleware.DisableCSRFMiddleware',
         # ...
     )
 
@@ -44,7 +44,7 @@ you probably want PermissiveCSRF after the ``django-sslify`` inclusion:
 
     MIDDLEWARE_CLASSES = (
         'sslify.middleware.SSLifyMiddleware',
-        'permissivecsrf.middleware.PermissiveCSRF',
+        'permissivecsrf.middleware.DisableCSRFMiddleware',
         # ...
     )
 
