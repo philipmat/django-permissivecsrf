@@ -66,15 +66,16 @@ Django's check will fail because:
 However, Django will not perform the CSRF check at all if the ``request`` object has 
 an attribute ``_dont_enforce_csrf_checks`` set to True. That's what PermissiveCSRF relies on:
 if the request came from the same site, regardless the protocol, it sets ``_dont_enforce_csrf_checks``
-to True thus telling the Djano CSRF middleware to skip the CSRF check for that request.
+to True thus telling the Django CSRF middleware to skip the CSRF check for that request.
 
 This only happens if:
+
 * ``DEBUG == True``. Your production server should always be HTTPS;
 * The ``HTTP-Referer`` header is present;
 * The request is for an HTTPS URL (i.e. ``request.is_secure() == True``);
 * and the referrer uses HTTP. 
 
-In all other cases it deffers to Django for normal processing.
+In all other cases it defers to Django for normal processing.
 
 
 How to make it even better?
