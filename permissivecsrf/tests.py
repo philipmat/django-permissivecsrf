@@ -17,7 +17,7 @@ class DisableCSRFMiddleware(TestCase):
         settings.DEBUG = False
         request = self.factory.get('/woot/')
         self.assertTrue(request.build_absolute_uri().startswith('http://'))
-        self.assertFalse('HTTP_REFERER' in req.META)
+        self.assertFalse('HTTP_REFERER' in request.META)
 
         middleware = _DisableCSRFMiddleware()
         request = middleware.process_request(request)

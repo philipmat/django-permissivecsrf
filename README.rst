@@ -31,7 +31,16 @@ Install from PyPi:
 Usage
 -----
 
-Modify your Django ``settings.py`` file and prepend PermissiveCSRF to your ``MIDDLEWARE_CLASSES``:
+Modify your Django ``settings.py`` file and add ``permissivecsrf`` to 
+the list of installed applications:
+
+    INSTALLED_APPS = (
+        # ...
+        'permissivecsrf',
+    )
+
+
+**Prepend** PermissiveCSRF to your ``MIDDLEWARE_CLASSES``:
 
     MIDDLEWARE_CLASSES = (
         'permissivecsrf.middleware.DisableCSRFMiddleware',
@@ -83,6 +92,8 @@ Tests? Yes!
 
     $ git clone https://github.com/philipmat/django-permissivecsrf
     $ cd django-permissivecsrf
+    $ virtualenv --distribute venv
+    $ . venv/bin/activate
     $ python setup.py develop
     ...
     $ python manage.py test permissivecsrf
