@@ -78,6 +78,18 @@ This only happens if:
 In all other cases it defers to Django for normal processing.
 
 
+Tests? Yes!
+-----------
+
+    $ git clone https://github.com/philipmat/django-permissivecsrf
+    $ cd django-permissivecsrf
+    $ python setup.py develop
+    ...
+    $ python manage.py test permissivecsrf
+
+
+
+
 How to make it even better?
 ---------------------------
 
