@@ -150,7 +150,7 @@ on the django-developers maillist.
 
 The take away from all this should be: in production use HTTPS (see `django-sslify`_). Period.
 
-**Seriously, don't use PermissiveCSRF in production. Is a bad idea.** And I should know, I have `plenty of them`_.
+**Seriously, don't use PermissiveCSRF in production. It's a bad idea.** And I should know, I have `plenty of them`_.
 
 
 .. _`django-sslify`: https://github.com/rdegges/django-sslify
