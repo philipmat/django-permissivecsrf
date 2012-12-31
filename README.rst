@@ -120,7 +120,7 @@ aka *plans for the future*
 2. Restrict the check for only a set of URLs, e.g. login pages.
 
 
-.. _`good reasons why this is happening`:
+.. _`good reasons why this is happening`: #why-is-this-csrf-httphttps-madness-happening
 
 Why is this CSRF HTTP/HTTPS madness happening?
 ----------------------------------------------
