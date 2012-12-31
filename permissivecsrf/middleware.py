@@ -7,7 +7,7 @@ except ImportError:  # Python 2
     urllib_parse.urlparse = urlparse.urlparse
 
 
-class DisableCSRFMiddleware(object):
+class PermissiveCSRFMiddleware(object):
     def process_request(self, request):
         # Only process in DEBUG
         if not settings.DEBUG:

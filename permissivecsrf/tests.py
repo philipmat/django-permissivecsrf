@@ -1,10 +1,10 @@
 from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
-from permissivecsrf.middleware import DisableCSRFMiddleware as _DisableCSRFMiddleware
+from permissivecsrf.middleware import PermissiveCSRFMiddleware as _PermissiveCSRFMiddleware
 
 
-class DisableCSRFMiddleware(TestCase):
+class PermissiveCSRFMiddleware(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
@@ -22,7 +22,7 @@ class DisableCSRFMiddleware(TestCase):
         request.META['HTTP_REFERER'] = referer
         self.assertTrue('HTTP_REFERER' in request.META)
 
-        middleware = _DisableCSRFMiddleware()
+        middleware = _PermissiveCSRFMiddleware()
         response = middleware.process_request(request)
 
         self.assertIsNone(response)
@@ -30,7 +30,7 @@ class DisableCSRFMiddleware(TestCase):
         self.assertTrue(getattr(request, '_dont_enforce_csrf_checks'))
 
     def _flag_not_set(self, request):
-        middleware = _DisableCSRFMiddleware()
+        middleware = _PermissiveCSRFMiddleware()
         response = middleware.process_request(request)
 
         self.assertIsNone(response)

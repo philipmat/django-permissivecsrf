@@ -2,7 +2,7 @@ Permissive CSRF for Django
 ==========================
 
 Are you using Django and trying to POST from a normal HTTP page 
-to an HTTPS on only to be hit by the puzzling 
+to an HTTPS, only to be hit by the puzzling 
 *"Referer checking failed - http://example.com/ does not match https://example.com/"*?
 
 First, you should know that there are `good reasons why this is happening`_,
@@ -40,20 +40,20 @@ the list of installed applications::
     )
 
 
-**Prepend** PermissiveCSRF to your ``MIDDLEWARE_CLASSES``::
+*Prepend* PermissiveCSRF to your ``MIDDLEWARE_CLASSES``::
 
     MIDDLEWARE_CLASSES = (
-        'permissivecsrf.middleware.DisableCSRFMiddleware',
+        'permissivecsrf.middleware.PermissiveCSRFMiddleware',
         # ...
     )
 
 PermissiveCSRF works with `django-sslify`_ too. Although the order doesn't really matter,
-you probably want PermissiveCSRF after the ``django-sslify`` inclusion::
+you probably want PermissiveCSRF after the django-sslify inclusion::
 
 
     MIDDLEWARE_CLASSES = (
         'sslify.middleware.SSLifyMiddleware',
-        'permissivecsrf.middleware.DisableCSRFMiddleware',
+        'permissivecsrf.middleware.PermissiveCSRFMiddleware',
         # ...
     )
 
@@ -63,13 +63,14 @@ How does it work?
 
 The `Django CSRF middleware`_ perform an extra-check if the request is over HTTPS to 
 ensure that the request came from the same site, i.e. that 
-the referrer (``HTTP-Referer`` header) matches the current site.
+the referrer (HTTP-Referer header) matches the current site.
 
-On other words, in ensures that the call to ``https://example.com/account/login``
-came from another page of ``https://example.com/``. As such, if you put your login 
-form on your un-secured homepage, ``http://example.com/``, but use a secure target 
+On other words, in ensures that the call to https://example.com/account/login
+came from another page of https://example.com/. As such, if you put your login 
+form on your un-secured homepage, http://example.com/, but use a secure target 
 for your form's *action* attribute, ``form action="https://example.com/account/login"``,
-Django's check will fail because: 
+Django's check will fail because::
+
 ``'http://example.com/' != ('https://%s/` % request.get_host())``.
 
 However, Django will not perform the CSRF check at all if the ``request`` object has 
@@ -125,8 +126,33 @@ aka *plans for the future*
 Why is this CSRF HTTP/HTTPS madness happening?
 ----------------------------------------------
 
+The *tl;dr* answer is "To prevent Man-in-the-Middle (MITM) attacks when using HTTPS, because HTTPS headers are encrypted.".
+
+The gist of why this happens is explained in point #4 of the `How it works`_ section of the Django documentation on
+Cross Site Request Forgery (emphasis mine):
+
+    4. In addition, for HTTPS requests, strict referer checking is done by CsrfViewMiddleware. 
+    This is necessary to address a Man-In-The-Middle attack that is possible under HTTPS 
+    when using a session independent nonce, due to the fact that HTTP 'Set-Cookie' headers 
+    are (unfortunately) accepted by clients that are talking to a site under HTTPS. 
+    **(Referer checking is not done for HTTP requests because the presence of the Referer header is not reliable enough under HTTP.)**
+
+In other words, because the HTTPS headers are encrypted, the *HTTP-Referer* header is resilient 
+against MITM attacks, so it can be safely used to check and make sure the CSRF cookie or fields
+is originated by the same site that served the page.
+
+The same check could be made on HTTP calls as well, but since HTTP headers are not encrypted, they 
+could be easily faked and thus the check would be a useless placebo.
+
+This explanation is also present, in comment form, in this f92a21daa7_ commit by spookylukey aka Luke Plant,
+and further detailed by him in a reply_ to a complaint about the strictness of CSRF Referer check 
+on the django-developers maillist.
 
 
 
 .. _`django-sslify`: https://github.com/rdegges/django-sslify
 .. _`Django CSRF middleware`: https://github.com/django/django/blob/master/django/middleware/csrf.py
+.. _`Django 13849`: https://code.djangoproject.com/ticket/13849
+.. _reply: https://groups.google.com/d/msg/django-developers/IgWK2vEePtY/R1r3Im4x3UMJ
+.. _f92a21daa7: https://github.com/django/django/commit/f92a21daa7
+.. _`How it works`: https://docs.djangoproject.com/en/dev/ref/contrib/csrf/#how-it-works
