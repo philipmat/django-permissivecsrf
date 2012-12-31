@@ -29,17 +29,20 @@ class DisableCSRFMiddleware(TestCase):
         self.assertTrue(hasattr(request, '_dont_enforce_csrf_checks'))
         self.assertTrue(getattr(request, '_dont_enforce_csrf_checks'))
 
+    def _flag_not_set(self, request):
+        middleware = _DisableCSRFMiddleware()
+        response = middleware.process_request(request)
+
+        self.assertIsNone(response)
+        self.assertFalse(hasattr(request, '_dont_enforce_csrf_checks'))
+
     def test_does_not_set_flag_when_debug_is_false(self):
         settings.DEBUG = False
         request = self.factory.get('/foo/')
         self.assertTrue(request.build_absolute_uri().startswith('http://'))
         self.assertFalse('HTTP_REFERER' in request.META)
 
-        middleware = _DisableCSRFMiddleware()
-        response = middleware.process_request(request)
-
-        self.assertIsNone(response)
-        self.assertFalse(hasattr(request, '_dont_enforce_csrf_checks'))
+        self._flag_not_set(request)
 
     def test_does_not_set_flat_when_missing_http_referer(self):
         settings.DEBUG = True
@@ -47,11 +50,7 @@ class DisableCSRFMiddleware(TestCase):
         self.assertTrue(request.build_absolute_uri().startswith('http://'))
         self.assertFalse('HTTP_REFERER' in request.META)
 
-        middleware = _DisableCSRFMiddleware()
-        response = middleware.process_request(request)
-
-        self.assertIsNone(response)
-        self.assertFalse(hasattr(request, '_dont_enforce_csrf_checks'))
+        self._flag_not_set(request)
 
     def test_does_not_set_flag_if_destination_is_not_secure(self):
         settings.DEBUG = True
@@ -60,11 +59,18 @@ class DisableCSRFMiddleware(TestCase):
         self.assertTrue(request.build_absolute_uri().startswith('http://'))
         self.assertTrue('HTTP_REFERER' in request.META)
 
-        middleware = _DisableCSRFMiddleware()
-        response = middleware.process_request(request)
+        self._flag_not_set(request)
 
-        self.assertIsNone(response)
-        self.assertFalse(hasattr(request, '_dont_enforce_csrf_checks'))
+    def test_does_not_set_flag_if_origin_is_not_http_even_if_secure(self):
+        settings.DEBUG = True
+        factory = RequestFactory(**{'wsgi.url_scheme': 'https'})
+        request = factory.get('/foo/')
+        self.assertTrue(request.is_secure())
+
+        request.META['HTTP_REFERER'] = 'https://example.com/'
+        self.assertTrue('HTTP_REFERER' in request.META)
+
+        self._flag_not_set(request)
 
     def test_does_not_set_flag_on_diff_origins(self):
         settings.DEBUG = True
@@ -76,9 +82,5 @@ class DisableCSRFMiddleware(TestCase):
         request.META['HTTP_REFERER'] = referer
         self.assertTrue('HTTP_REFERER' in request.META)
 
-        middleware = _DisableCSRFMiddleware()
-        response = middleware.process_request(request)
-
-        self.assertIsNone(response)
-        self.assertFalse(hasattr(request, '_dont_enforce_csrf_checks'))
+        self._flag_not_set(request)
 
