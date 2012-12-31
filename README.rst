@@ -9,9 +9,9 @@ First, you should know that there are `good reasons why this is happening`_,
 and in understanding them you can decide whether trading off security 
 for convenience is worth it.
 
-Second, you should know that the best way to solve this issue is to 
-use HTTPS on all your pages, and with packages like `django-sslify`_
-you have no excuse not to use it.
+Second, the best way to solve this issue is to 
+use HTTPS on all your pages and with packages like `django-sslify`_
+you have no excuse not to.
 
 If, after reading all the above, you're still set on making the trade,
 here is how to use PermissiveCSRF in your Django site.
@@ -47,7 +47,7 @@ the list of installed applications::
         # ...
     )
 
-PermissiveCSRF works with `django-sslify`_ too. Although the order doesn't really matter,
+**Note:** PermissiveCSRF works with `django-sslify`_ too. Although the order doesn't really matter,
 you probably want PermissiveCSRF after the django-sslify inclusion::
 
 
@@ -61,22 +61,22 @@ you probably want PermissiveCSRF after the django-sslify inclusion::
 How does it work?
 -----------------
 
-The `Django CSRF middleware`_ perform an extra-check if the request is over HTTPS to 
+The `Django CSRF middleware`_ performs an extra-check if the request is over HTTPS to 
 ensure that the request came from the same site, i.e. that 
 the referrer (HTTP-Referer header) matches the current site.
 
-On other words, in ensures that the call to https://example.com/account/login
+In other words, in ensures that the call to https://example.com/account/login
 came from another page of https://example.com/. As such, if you put your login 
-form on your un-secured homepage, http://example.com/, but use a secure target 
-for your form's *action* attribute, ``form action="https://example.com/account/login"``,
+form on your non-secure homepage, http://example.com/, but use a secure target 
+for your form's *action* attribute, ``<form action="https://example.com/account/login" method="POST">``,
 Django's check will fail because::
 
-``'http://example.com/' != ('https://%s/` % request.get_host())``.
+'http://example.com/' != ('https://%s/` % request.get_host())
 
 However, Django will not perform the CSRF check at all if the ``request`` object has 
 an attribute ``_dont_enforce_csrf_checks`` set to True. That's what PermissiveCSRF relies on:
-if the request came from the same site, regardless the protocol, it sets ``_dont_enforce_csrf_checks``
-to True thus telling the Django CSRF middleware to skip the CSRF check for that request.
+if the request came from the same site over HTTP it sets ``_dont_enforce_csrf_checks``
+to True, thus telling the Django CSRF middleware to skip the CSRF check for that request.
 
 This only happens if:
 
@@ -126,7 +126,7 @@ aka *plans for the future*
 Why is this CSRF HTTP/HTTPS madness happening?
 ----------------------------------------------
 
-The *tl;dr* answer is "To prevent Man-in-the-Middle (MITM) attacks when using HTTPS, because HTTPS headers are encrypted.".
+The *tl;dr* answer is: to prevent Man-in-the-Middle (MITM) attacks when using HTTPS, because HTTPS headers are encrypted.
 
 The gist of why this happens is explained in point #4 of the `How it works`_ section of the Django documentation on
 Cross Site Request Forgery (emphasis mine):
@@ -148,6 +148,9 @@ This explanation is also present, in comment form, in this f92a21daa7_ commit by
 and further detailed by him in a reply_ to a complaint about the strictness of CSRF Referer check 
 on the django-developers maillist.
 
+The take away from all this should be: in production use HTTPS (see `django-sslify`_). Period.
+
+**Seriously, don't use PermissiveCSRF in production. Is a bad idea. And I should know, I have `plenty of them <http://philipm.at/>`_.**
 
 
 .. _`django-sslify`: https://github.com/rdegges/django-sslify
