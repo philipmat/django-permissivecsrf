@@ -89,7 +89,9 @@ In all other cases it defers to Django for normal processing.
 
 Tests? Yes!
 -----------
+
 ::
+
     $ git clone https://github.com/philipmat/django-permissivecsrf
     $ cd django-permissivecsrf
     $ virtualenv --distribute venv
@@ -115,10 +117,10 @@ aka *plans for the future*
 
 1. PermissiveCSRF should still perform the CSRF check rather than instruct Django 
    to skip it altogether.
-1. Restrict the check for only a set of URLs, e.g. login pages.
+2. Restrict the check for only a set of URLs, e.g. login pages.
 
 
-.. _good-reasons-why-this-is-happening:
+.. _`good reasons why this is happening`:
 
 Why is this CSRF HTTP/HTTPS madness happening?
 ----------------------------------------------
@@ -126,5 +128,5 @@ Why is this CSRF HTTP/HTTPS madness happening?
 
 
 
-.. django-sslify: https://github.com/rdegges/django-sslify
-.. Django CSRF middleware: https://github.com/django/django/blob/master/django/middleware/csrf.py
+.. _`django-sslify`: https://github.com/rdegges/django-sslify
+.. _`Django CSRF middleware`: https://github.com/django/django/blob/master/django/middleware/csrf.py
