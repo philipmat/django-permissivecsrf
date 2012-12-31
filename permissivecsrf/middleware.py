@@ -25,5 +25,6 @@ class DisableCSRFMiddleware(object):
             dest = 'https://%s' % request.get_host()
             dest_parts = urllib_parse.urlparse(dest)
             same_origin = (ref_parts.hostname, ref_parts.port) == (dest_parts.hostname, dest_parts.port)
+            # print 'ref=%s:%s dest=%s:%s ? %s' % (ref_parts.hostname, ref_parts.port, dest_parts.hostname, dest_parts.port, same_origin)
             if same_origin:
                 setattr(request, '_dont_enforce_csrf_checks', True)
