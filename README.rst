@@ -20,7 +20,7 @@ here is how to use PermissiveCSRF in your Django site.
 Installation
 ------------
 
-Install from PyPi:
+Install from PyPi::
     
     pip install django-permissivecsrf
 
@@ -32,7 +32,7 @@ Usage
 -----
 
 Modify your Django ``settings.py`` file and add ``permissivecsrf`` to 
-the list of installed applications:
+the list of installed applications::
 
     INSTALLED_APPS = (
         # ...
@@ -40,7 +40,7 @@ the list of installed applications:
     )
 
 
-**Prepend** PermissiveCSRF to your ``MIDDLEWARE_CLASSES``:
+**Prepend** PermissiveCSRF to your ``MIDDLEWARE_CLASSES``::
 
     MIDDLEWARE_CLASSES = (
         'permissivecsrf.middleware.DisableCSRFMiddleware',
@@ -48,7 +48,7 @@ the list of installed applications:
     )
 
 PermissiveCSRF works with `django-sslify`_ too. Although the order doesn't really matter,
-you probably want PermissiveCSRF after the ``django-sslify`` inclusion:
+you probably want PermissiveCSRF after the ``django-sslify`` inclusion::
 
 
     MIDDLEWARE_CLASSES = (
@@ -89,7 +89,7 @@ In all other cases it defers to Django for normal processing.
 
 Tests? Yes!
 -----------
-
+::
     $ git clone https://github.com/philipmat/django-permissivecsrf
     $ cd django-permissivecsrf
     $ virtualenv --distribute venv
@@ -97,7 +97,14 @@ Tests? Yes!
     $ python setup.py develop
     ...
     $ python manage.py test permissivecsrf
+    ...
+    Creating test database for alias 'default'...
+    .....
+    ----------------------------------------------------------------------
+    Ran 5 tests in 0.002s
 
+    OK
+    Destroying test database for alias 'default'...
 
 
 
@@ -111,7 +118,7 @@ aka *plans for the future*
 1. Restrict the check for only a set of URLs, e.g. login pages.
 
 
-.. _good reasons why this is happening:
+.. _good-reasons-why-this-is-happening:
 
 Why is this CSRF HTTP/HTTPS madness happening?
 ----------------------------------------------
