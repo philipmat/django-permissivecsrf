@@ -1,10 +1,10 @@
 import os
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 try:
-    f = open(os.path.join(os.path.dirname(__file__), 'README.rst', 'rt'))
-    long_description = f.read() # .strip()
+    f = open(os.path.join(os.path.dirname(__file__), 'README.rst'), 'rt')
+    long_description = f.read().strip()
     f.close()
 except IOError:
     long_description = None

@@ -1,4 +1,3 @@
-
 Permissive CSRF for Django
 ==========================
 
