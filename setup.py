@@ -12,7 +12,7 @@ except IOError:
 setup(
     # Basic package information
     name='django-permissivecsrf',
-    version='0.1.0',
+    version='1.0.0',
     packages=('permissivecsrf',),
 
     # test_suite='tests.runtests.main',
