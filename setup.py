@@ -3,8 +3,8 @@ from setuptools import setup, find_packages
 
 
 try:
-    f = open(os.path.join(os.path.dirname(__file__), 'README.rst'))
-    long_description = f.read().strip()
+    f = open(os.path.join(os.path.dirname(__file__), 'README.rst', 'rt'))
+    long_description = f.read() # .strip()
     f.close()
 except IOError:
     long_description = None
@@ -12,7 +12,7 @@ except IOError:
 setup(
     # Basic package information
     name='django-permissivecsrf',
-    version='0.1',
+    version='0.1.0',
     packages=('permissivecsrf',),
 
     # test_suite='tests.runtests.main',
